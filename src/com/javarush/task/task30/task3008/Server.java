@@ -49,6 +49,26 @@ public class Server {
             this.socket = socket;
         }
 
+        @Override
+        public void run() {
+            ConsoleHelper.writeMessage("Соединение установлено " + socket.getRemoteSocketAddress());
+            String userName = null;
+            try (Connection connection = new Connection(socket)) {
+                userName = serverHandshake(connection);
+                sendBroadcastMessage(new Message(MessageType.USER_ADDED, userName));
+                notifyUsers(connection, userName);
+                serverMainLoop(connection, userName);
+                connectionMap.remove(userName);
+                Message message = new Message(MessageType.USER_REMOVED, userName);
+                Server.sendBroadcastMessage(message);
+
+            } catch (IOException | ClassNotFoundException e) {
+                ConsoleHelper.writeMessage(e.getMessage());
+            }
+
+            ConsoleHelper.writeMessage("Соединение закрыто");
+        }
+
         private String serverHandshake(Connection connection) throws IOException, ClassNotFoundException {
             Message request = new Message(MessageType.NAME_REQUEST);
             Message answer = null;
