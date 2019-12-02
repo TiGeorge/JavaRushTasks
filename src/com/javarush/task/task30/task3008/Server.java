@@ -68,10 +68,10 @@ public class Server {
         }
 
         private void notifyUsers(Connection connection, String userName) throws IOException {
-            for (Map.Entry<String, Connection> entry : connectionMap.entrySet()) {
-                int i = 1;
-                int r = 2;
-                int e = 2;
+
+            for (String name : connectionMap.keySet()) {
+                Message message = new Message(MessageType.USER_ADDED, name);
+                if(!name.equals(userName)) connection.send(message);
             }
         }
     }
