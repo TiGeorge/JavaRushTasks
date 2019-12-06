@@ -5,8 +5,6 @@ import com.javarush.task.task30.task3008.ConsoleHelper;
 import java.io.IOException;
 import java.text.SimpleDateFormat;
 import java.util.Calendar;
-import java.util.Date;
-import java.util.Locale;
 
 public class BotClient extends Client {
 
@@ -40,53 +38,49 @@ public class BotClient extends Client {
             BotClient.this.sendTextMessage(text);
             super.clientMainLoop();
         }
-
         @Override
         protected void processIncomingMessage(String message) {
-            ConsoleHelper.writeMessage(message);
-            String[] strings = message.split(": ");
-            if (strings.length > 2) {
-                String name = strings[0];
-                String command = strings[1];
-                SimpleDateFormat dateFormat = null;
-                switch (command) {
-                    case "дата":
-                        dateFormat = new SimpleDateFormat("d.MM.YYYY", Locale.ENGLISH);
-                        break;
-                    case "день":
-                        dateFormat = new SimpleDateFormat("d", Locale.ENGLISH);
-                        break;
-                    case "месяц":
-                        dateFormat = new SimpleDateFormat("MMMM", Locale.ENGLISH);
-                        break;
-                    case "год":
-                        dateFormat = new SimpleDateFormat("YYYY", Locale.ENGLISH);
-                        break;
-                    case "время":
-                        dateFormat = new SimpleDateFormat("H:mm:ss", Locale.ENGLISH);
-                        break;
-                    case "час":
-                        dateFormat = new SimpleDateFormat("H", Locale.ENGLISH);
-                        break;
-                    case "минуты":
-                        dateFormat = new SimpleDateFormat("m", Locale.ENGLISH);
-                        break;
-                    case "секунды":
-                        dateFormat = new SimpleDateFormat("s", Locale.ENGLISH);
-                        break;
+            if (message != null) {
+                ConsoleHelper.writeMessage(message);
+                SimpleDateFormat format = null;
+                if (message.contains(": ")) {
+                    String[] massiv = message.split(": ");
+                    if (massiv.length == 2 && massiv[1] != null) {
+                        String name = massiv[0];
+                        String text = massiv[1];
+                        switch (text) {
+                            case "дата":
+                                format = new SimpleDateFormat("d.MM.YYYY");
+                                break;
+                            case "день":
+                                format = new SimpleDateFormat("d");
+                                break;
+                            case "месяц":
+                                format = new SimpleDateFormat("MMMM");
+                                break;
+                            case "год":
+                                format = new SimpleDateFormat("YYYY");
+                                break;
+                            case "время":
+                                format = new SimpleDateFormat("H:mm:ss");
+                                break;
+                            case "час":
+                                format = new SimpleDateFormat("H");
+                                break;
+                            case "минуты":
+                                format = new SimpleDateFormat("m");
+                                break;
+                            case "секунды":
+                                format = new SimpleDateFormat("s");
+                                break;
+
+                        }
+                        if (format != null) {
+                            sendTextMessage(String.format("Информация для %s: %s", name, format.format(Calendar.getInstance().getTime())));
+                        }
+                    }
                 }
-
-                if (dateFormat != null) {
-                    Calendar calendar = Calendar.getInstance();
-                    Date date = calendar.getTime();
-                    String answer = String.format("Информация для %s: %s", name, dateFormat.format(date));
-                    sendTextMessage(answer);
-                }
-
-
-
             }
-
         }
     }
 
