@@ -15,5 +15,8 @@ public class Pair {
     }
 
     public void swap() {
+        x ^= y;
+        y ^= x;
+        x ^= y;
     }
 }
