@@ -20,6 +20,10 @@ public class Order {
         return dishes.size() == 0;
     }
 
+    public List<Dish> getDishes() {
+        return dishes;
+    }
+
     public int getTotalCookingTime() {
         return dishes.stream().mapToInt(Dish::getDuration).sum();
     }
