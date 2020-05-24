@@ -28,12 +28,7 @@ public class AdvertisementManager {
                 advertisements.add(ad);
             }
         }
-        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(advertisements, advertisements.size(), timeSeconds));
-
-
         if (advertisements.isEmpty()) throw new NoVideoAvailableException();
-
-
 
         Collections.sort(advertisements, new Comparator<Advertisement>() {
             @Override
@@ -64,6 +59,7 @@ public class AdvertisementManager {
             }
         }
 
+        StatisticManager.getInstance().register(new VideoSelectedEventDataRow(adsForShow, totalAmount, totalDuration));
 
         int timeLeft = timeSeconds;
         for (Advertisement advertisement : adsForShow) {

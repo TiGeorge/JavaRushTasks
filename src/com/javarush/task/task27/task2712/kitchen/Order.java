@@ -11,25 +11,39 @@ public class Order {
     public final Tablet tablet;
     protected List<Dish> dishes;
 
-    public Order(Tablet tablet) throws IOException {
-        this.tablet = tablet;
+    protected void initDishes() throws IOException {
+        //ConsoleHelper.writeMessage(Dish.allDishesToString()); //?
         dishes = ConsoleHelper.getAllDishesForOrder();
     }
 
+    public Order(Tablet tablet) throws IOException {
+        this.tablet = tablet;
+        initDishes();
+    }
+
+    @Override
+    public String toString() {
+        return dishes.isEmpty() ? "" : String.format("Your order: %s of %s", dishes, tablet);
+    }
+
+    public int getTotalCookingTime() {
+        int cookingTime = 0;
+        for (Dish dish : dishes) {
+            cookingTime += dish.getDuration();
+        }
+        return cookingTime;
+    }
+
     public boolean isEmpty() {
-        return dishes.size() == 0;
+        if (!dishes.isEmpty()) return false;
+        return true;
     }
 
     public List<Dish> getDishes() {
         return dishes;
     }
 
-    public int getTotalCookingTime() {
-        return dishes.stream().mapToInt(Dish::getDuration).sum();
-    }
-
-    @Override
-    public String toString() {
-        return dishes.isEmpty() ? "" : "Your order: " + dishes + " of " + tablet;
+    public Tablet getTablet() {
+        return tablet;
     }
 }

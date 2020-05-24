@@ -9,35 +9,34 @@ import java.util.ArrayList;
 import java.util.List;
 
 public class ConsoleHelper {
-
-    private static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
-
-    public static void writeMessage(String message) {
+    private static BufferedReader bis = new BufferedReader(new InputStreamReader(System.in));
+    public static void writeMessage(String message){
         System.out.println(message);
     }
-
     public static String readString() throws IOException {
-        return reader.readLine();
+        String text = bis.readLine();
+        return text;
     }
-
     public static List<Dish> getAllDishesForOrder() throws IOException {
+        List<Dish> dishList = new ArrayList<>();
+        writeMessage(Dish.allDishesToString());
+        writeMessage("Введите список блюд, 'exit' - завершение заказа.");
+        String result = null;
+        while (true){
+            boolean a = false;
+            result = bis.readLine();
+            if(result.equals("exit"))break;
 
-        List<Dish> dishes = new ArrayList<>();
-
-        while (true) {
-            writeMessage("Выбери блюдо: " + Dish.allDishesToString() + ", exit.");
-            String dishStr = readString();
-            if (dishStr.equals("exit")) {
-                return dishes;
-            } else {
-                try {
-                    dishes.add(Dish.valueOf(dishStr));
-                } catch (IllegalArgumentException e) {
-                    writeMessage("Такого блюда нет.");
+            for (Dish dish: Dish.values()){
+                if (result.equals(dish.toString())) {
+                    dishList.add(dish);
+                    a = true;
                 }
             }
-        }
+            if(!a)writeMessage("Вы ввели не правильное блюдо!");
 
+        }
+        return dishList;
     }
 
 }
